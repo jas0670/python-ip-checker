@@ -6,3 +6,5 @@ f0d4525f-a4da-42ef-ba45-17d82d812531
 API PASSWORD:
 92209c34-896d-4f08-b787-723f2b71b336
  
+USE THIS HTTP FOR TESTING PURPOSES (this will not affect our number of queries for the month):
+https://api.xforce.ibmcloud.com/auth/f0d4525f-a4da-42ef-ba45-17d82d812531
