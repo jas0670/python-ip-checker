@@ -1,9 +1,9 @@
 import requests
 
-response = requests.get("https://api.xforce.ibmcloud.com/ip/history/216.58.217.163")
+response = requests.get("https://api.xforce.ibmcloud.com/ipr/history/181.214.206.148")
 #these prints are temporary while I fix the if else statement. Use this for now.
-print response
-print response.json()
+print(response)
+print(response.json())
 
 #Still under work
 #if response == '<Response [200]>':
