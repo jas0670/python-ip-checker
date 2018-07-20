@@ -1,7 +1,6 @@
-#import openpyxl
 import re
-#import warnings
 import grequests
+import csv
 import requests
 import time
 import os
@@ -68,10 +67,21 @@ class IPC():
 		for cell in [x for t in self.sheet['B{}'.format(self.startrow):'B{}'.format(self.sheet.max_row)] for x in t]:
 			cell.value = scores.pop(0)
 
-	# Pulls data from the URLVoid API
-	def urlvoid(self):
-		# Put Code here
-		return None
+	# Pulls data from the IPSpamList daily top IPs 1000 CSV
+	def ipspamlist(self):
+		with requests.Session() as s:
+		    download = s.get('http://www.ipspamlist.com/public_feeds.csv')
+
+		    decoded_content = download.content.decode('utf-8')
+
+		    cr = csv.reader(decoded_content.splitlines(), delimiter=',')
+		    my_list = list(cr)
+		    # Remove header row
+		    my_list.pop(0) 
+		    for row in my_list:
+		    	# Put code here for processing each IP in the list
+		    	# Index 2 is the IP
+		        print(row[2])
 
 	# Pulls data from the TotalVirus API
 	def totalvirus(self):
@@ -85,5 +95,7 @@ class IPC():
 
 checker = IPC()
 checker.load()
-checker.xforce()
+# Commented out for testing purposes
+#checker.xforce()
+checker.ipspamlist()
 checker.save()
