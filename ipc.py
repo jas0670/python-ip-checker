@@ -50,38 +50,57 @@ class IPC():
 			for cell in row:
 				urls.append("https://api.xforce.ibmcloud.com/ipr/history/{}".format(cell.value))
 
-		url_lists = [urls[x:x+10] for x in range(0, len(urls), 10)]
-		for l in url_lists:
-			request_list = (grequests.get(u, timeout=1000) for u in l)
-			print("Sending request of {} IPs...".format(len(l)))
-			responses.extend(grequests.map(request_list))
+		# ASYNC REQUESTS
+		# This mostly works, and is faster, but occassionally drops requests
+		#url_lists = [urls[x:x+10] for x in range(0, len(urls), 10)]
+		#for l in url_lists:
+		#	request_list = (grequests.get(u, timeout=1000) for u in l)
+		#	print("Sending request of {} IPs...".format(len(l)))
+		#	responses.extend(grequests.map(request_list))
 
-		scores = []
+		# SYNC BLOCKING REQUESTS
+		for u in urls:
+			response = requests.get(u)
+			print("Sending request for {}".format(u))
+			responses.append(response)
+
+		# Get the data from each response. Data currently includes score, and a comma separated
+		# list of all categories that gave that score
+		data = []
 		for r in responses:
 			try:
-				scores.append(r.json()['history'][-1]['score'])
+				current_data = r.json()
+				data.append({'score': current_data['history'][-1]['score'], 'category': ", ".join(list(current_data['history'][-1]['categoryDescriptions'].keys()))})
 			except:
-				scores.append("Timeout")
+				data.append({'score': "Timeout", 'category': "Timeout"})
 
 		# Add scores back to spreadsheet and save
-		for cell in [x for t in self.sheet['B{}'.format(self.startrow):'B{}'.format(self.sheet.max_row)] for x in t]:
-			cell.value = scores.pop(0)
+		# for cell in [x for t in self.sheet['B{}'.format(self.startrow):'B{}'.format(self.sheet.max_row)] for x in t]:
+		for row in self.sheet.iter_rows(min_row=self.startrow, min_col=2, max_col=3, max_row=self.sheet.max_row):
+			current_row = list(row)
+			current_row[0].value = data[0]['score']
+			current_row[1].value = data[0]['category']
+			data.pop(0)
+			#for cell in row:
+				#cell.value = data.pop(0)
 
 	# Pulls data from the IPSpamList daily top IPs 1000 CSV
 	def ipspamlist(self):
 		with requests.Session() as s:
-		    download = s.get('http://www.ipspamlist.com/public_feeds.csv')
+			try:
+				download = s.get('http://www.ipspamlist.com/public_feeds.csv')
 
-		    decoded_content = download.content.decode('utf-8')
-
-		    cr = csv.reader(decoded_content.splitlines(), delimiter=',')
-		    my_list = list(cr)
-		    # Remove header row
-		    my_list.pop(0) 
-		    for row in my_list:
-		    	# Put code here for processing each IP in the list
-		    	# Index 2 is the IP
-		        print(row[2])
+				decoded_content = download.content.decode('utf-8')
+				cr = csv.reader(decoded_content.splitlines(), delimiter=',')
+				my_list = list(cr)
+				# Remove header row
+				my_list.pop(0) 
+				for row in my_list:
+					# Put code here for processing each IP in the list
+					# Index 2 is the IP
+					print(row[2])
+			except:
+				print("Error attempting to download http://www.ipspamlist.com/public_feeds.csv")
 
 	# Pulls data from the TotalVirus API
 	def totalvirus(self):
@@ -95,7 +114,7 @@ class IPC():
 
 checker = IPC()
 checker.load()
+checker.xforce()
 # Commented out for testing purposes
-#checker.xforce()
-checker.ipspamlist()
+#checker.ipspamlist()
 checker.save()
