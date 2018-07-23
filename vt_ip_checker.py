@@ -26,6 +26,7 @@ while ip is not None:
 		ws[new_cell].value = ip_report
 		n += 1
 		value += 1
+		wb.save('example_testfile.xlsx')
 
 	print n
 	time.sleep(60)
