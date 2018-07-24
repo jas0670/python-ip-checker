@@ -24,7 +24,7 @@ class IPC():
 		while choice < 1 or choice > 3:
 			print("\n*** Wipro Python IP Checker ***\n")
 			print("		1) Start from beginning")
-			print("		2) Start from last checked")
+			print("		2) Start from last checked" )
 			print("		3) Exit\n")
 			choice = int(input("  > "))
 
@@ -60,8 +60,9 @@ class IPC():
 
 		# SYNC BLOCKING REQUESTS
 		for u in urls:
-			response = requests.get(u)
 			print("Sending request for {}".format(u))
+			# Key located below
+			response = requests.get(u, auth=('f0d4525f-a4da-42ef-ba45-17d82d812531','92209c34-896d-4f08-b787-723f2b71b336'))
 			responses.append(response)
 
 		# Get the data from each response. Data currently includes score, and a comma separated
@@ -76,10 +77,13 @@ class IPC():
 
 		# Add scores back to spreadsheet and save
 		# for cell in [x for t in self.sheet['B{}'.format(self.startrow):'B{}'.format(self.sheet.max_row)] for x in t]:
-		for row in self.sheet.iter_rows(min_row=self.startrow, min_col=2, max_col=3, max_row=self.sheet.max_row):
+		for row in self.sheet.iter_rows(min_row=self.startrow, min_col=1, max_col=4, max_row=self.sheet.max_row):
 			current_row = list(row)
-			current_row[0].value = data[0]['score']
-			current_row[1].value = data[0]['category']
+			current_row[1].value = data[0]['score']
+			current_row[2].value = data[0]['category']
+			# Set hyperlink to the API
+			current_row[3].hyperlink = "https://exchange.xforce.ibmcloud.com/ip/{}".format(current_row[0].value)
+			current_row[3].value = "https://exchange.xforce.ibmcloud.com/ip/{}".format(current_row[0].value)
 			data.pop(0)
 			#for cell in row:
 				#cell.value = data.pop(0)
