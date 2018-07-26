@@ -224,12 +224,12 @@
         # Bar
         x=$(($1 % ${#SPINNER} + 1))
         BAR=$(echo $SPINNER | awk "{ print substr(\$0, ${x}, 1) }")
-        #if test -z "$PLAIN"; then
-            #printf "\r ";
-        #fi
+        if test -z "$PLAIN"; then
+            printf "\r ";
+        fi
 
         # BAR as printf arg so that backslash will be litteraly interpreted
-        #printf "[ %s %3s%% ] checking... %4s / $2  " "$BAR" $(($1 * 100 / $2)) "$1";
+        printf "[ %s %3s%% ] checking... %4s / $2  " "$BAR" $(($1 * 100 / $2)) "$1";
     }
 
     # Resolve the IP
@@ -360,7 +360,7 @@ esac
 
 # Validate PTR
 if [ ! "$PTR" ]; then
-    info 0 #"${YELLOW}Warning: PTR lookup failed${CLEAR}"
+    info 0 "${YELLOW}Warning: PTR lookup failed${CLEAR}"
 
 else
 
@@ -470,7 +470,7 @@ for BL in $BLACKLISTS; do
         if [ ! "$ERROR" ]; then
             if [ "$VERIFY_BL" ] || [ $VERBOSE -ge 1 ]; then
                 if test -z "$PLAIN"; then printf "\r"; fi
-                #printf "%s%s✓%s\n" "$CLEAR" "$PREFIX" "$CLEAR";
+                printf "%s%s✓%s\n" "$CLEAR" "$PREFIX" "$CLEAR";
             fi
             PASSED=$((PASSED + 1))
         fi;
@@ -485,32 +485,32 @@ for BL in $BLACKLISTS; do
 
     # Blacklisted
     else
-        #if [ $VERBOSE -ge 1 ]; then
-            #if test -z "$PLAIN"; then printf "\r"; fi
-            #printf "%s%sblacklisted (%s)%s\n" "$RED" "$PREFIX" "$RESPONSE" "$CLEAR";
-        #elif [ $VERBOSE -ge 0 ]; then
-            #if test -z "$PLAIN"; then printf "\r                                                          "; printf "\r"; fi
-            #printf "%s%s%s : %s\n" "$RED" "$BL" "$CLEAR" "$RESPONSE"
-        #fi
+        if [ $VERBOSE -ge 1 ]; then
+            if test -z "$PLAIN"; then printf "\r"; fi
+            printf "%s%sblacklisted (%s)%s\n" "$RED" "$PREFIX" "$RESPONSE" "$CLEAR";
+        elif [ $VERBOSE -ge 0 ]; then
+            if test -z "$PLAIN"; then printf "\r                                                          "; printf "\r"; fi
+            printf "%s%s%s : %s\n" "$RED" "$BL" "$CLEAR" "$RESPONSE"
+        fi
         FAILED=$((FAILED + 1))
     fi
 done
 
 # Print results
 if [ $VERBOSE -ge 0 ]; then
-    #if test -z "$PLAIN"; then
-    #    printf "\r                                                    \n"
-    #else
-        #printf "                                                     \n"
-    #fi
-    #echo "----------------------------------------------------------"
-    #echo Results for "$TARGET"
-    #echo
-    #printf "%-15s" "Tested:";   echo "${COUNT}"
-    #printf "%-15s" "Passed:";   echo "${GREEN}${PASSED}${CLEAR}"
-    #printf "%-15s" "Invalid:"; 	 echo "${YELLOW}${INVALID}${CLEAR}"
-    echo "Blacklisted: ${FAILED}";
-    #echo "----------------------------------------------------------"
+    if test -z "$PLAIN"; then
+        printf "\r                                                    \n"
+    else
+        printf "                                                     \n"
+    fi
+    echo "----------------------------------------------------------"
+    echo Results for "$TARGET"
+    echo
+    printf "%-15s" "Tested:";   echo "${COUNT}"
+    printf "%-15s" "Passed:";   echo "${GREEN}${PASSED}${CLEAR}"
+    printf "%-15s" "Invalid:";  echo "${YELLOW}${INVALID}${CLEAR}"
+    printf "%-15s" "Blacklisted:";  echo "${RED}${FAILED}${CLEAR}"
+    echo "----------------------------------------------------------"
 fi
 
 exit $FAILED;
