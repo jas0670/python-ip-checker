@@ -2,11 +2,12 @@ import virustotal2 #virus total has their own library that we used for this scri
 import os #imported for future usage, once we want the script to run on its own without user interface
 import time #needed because virus total only takes 4 queries every minute. As of right now, it takes the script about an hour to run (7/23/2018)
 import openpyxl #to read frome excel files 
+import json
 
 
 wb = openpyxl.load_workbook('example_testfile.xlsx') #change file name to whatever you want to open to
 ws = wb['Sheet2']
-ss = wb['Sheet4'] #if we ever want to add information to a second sheet, the optionality is there
+#ss = wb['Sheet4'] #if we ever want to add information to a second sheet, the optionality is there
 
 value = 2
 letter = 'A'
@@ -17,6 +18,7 @@ ip = 'i'
 print_value = str(value) #unorthodox way of iterating through everything in the manner I wanted to.
 cell = letter+print_value
 
+ip_report = {}
 while ws[cell].value: #basically, while the cell has an obtainable value
 	while n < 4:
 		print_value = str(value)
@@ -26,8 +28,24 @@ while ws[cell].value: #basically, while the cell has an obtainable value
 		if ws[cell].value is None: #if there is no obtainable information in the loop
 			#print "Inside the loop!"
 			break
+
 		ip_report = vt.retrieve(ip, raw = True) #the raw=True part is ESSENTIAL, otherwise the information retrieved is inaccessible.
-		new_cell = 'B'+print_value
+		new_cell = 'D'+print_value
+		#
+		#new stuff added here
+		#
+		response_dict = json.loads(ip_report)
+		#print(response_dict)
+		#
+		#
+
+
+
+
+
+
+
+
 		ws[new_cell].value = ip_report
 		n += 1
 		value += 1
@@ -36,6 +54,27 @@ while ws[cell].value: #basically, while the cell has an obtainable value
 	#print n
 	time.sleep(60) #makes the program pause for a minute to prevent the IP addresses from not timing out.
 	n = 0
+#
+#
+#
+#
+newString=""
+for k,v in response_dict.items():
+	print("KEY BELOW")
+	print("-----------------------------------")
+	print(k)
+	print("-----------------------------------")
+	print("VALUES BELOW")
+   	print("-----------------------------------")
+	print(v)
+	print("-----------------------------------")
+	newString += str(v)
+
+newString = newString.replace("}", "}\n")
+newString = newString.replace(",", ",\n")
+newString = newString.replace("{", "")
+newString = newString.replace("}", "\n")
+print(newString)
 
 
 wb.save('example_testfile.xlsx') #change the final file name output to whatever you want.
