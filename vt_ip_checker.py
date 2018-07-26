@@ -4,9 +4,9 @@ import time #needed because virus total only takes 4 queries every minute. As of
 import openpyxl #to read frome excel files 
 
 
-wb = openpyxl.load_workbook('testfile.xlsx') #change file name to whatever you want to open to
-ws = wb['Sheet1']
-ss = wb['Sheet2'] #if we ever want to add information to a second sheet, the optionality is there
+wb = openpyxl.load_workbook('example_testfile.xlsx') #change file name to whatever you want to open to
+ws = wb['Sheet2']
+ss = wb['Sheet4'] #if we ever want to add information to a second sheet, the optionality is there
 
 value = 2
 letter = 'A'
