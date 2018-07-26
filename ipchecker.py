@@ -1,3 +1,10 @@
+'''
+This requires python3, make sure you have pip3 installed as well
+Need to have installed from pip:
+- openpyxl
+'''
+
+
 import os,sys #needed to run  bash scripts
 import openpyxl #needed to mess with excel
 import time #needed to make a pause
