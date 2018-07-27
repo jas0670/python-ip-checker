@@ -24,7 +24,7 @@ while ws[cell].value:
 	print(response)
 	response_data = response.json()
 	cell = 'C'+print_value
-	ws[cell].value = str((response_data['history'][-1]['categoryDescriptions']))
+	ws[cell].value = ''.join(list(response_data['history'][-1]['categoryDescriptions'].keys()))
 	value += 1
 	print("end of loop")
 	wb.save('example_testfile.xlsx')
