@@ -5,6 +5,13 @@ Need to have installed from pip:
 '''
 
 
+'''
+This requires python3, make sure you have pip3 installed as well
+Need to have installed from pip:
+- openpyxl
+'''
+
+
 import os,sys #needed to run  bash scripts
 import openpyxl #needed to mess with excel
 import time #needed to make a pause
@@ -52,4 +59,4 @@ while ws[cell].value: #basically, while the cell has an obtainable value, do thi
 	value += 1 #goes to the next spot in the excel sheet
 	wb.save('example_testfile.xlsx')
 
-subprocess.call("ipcopy.py", shell=True)
+subprocess.call("python3 ipcopy.py", shell=True)
