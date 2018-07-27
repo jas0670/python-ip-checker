@@ -224,12 +224,12 @@
         # Bar
         x=$(($1 % ${#SPINNER} + 1))
         BAR=$(echo $SPINNER | awk "{ print substr(\$0, ${x}, 1) }")
-        #if test -z "$PLAIN"; then
-            #printf "\r ";
-        #fi
+        if test -z "$PLAIN"; then
+            printf "\r ";
+        fi
 
         # BAR as printf arg so that backslash will be litteraly interpreted
-        #printf "[ %s %3s%% ] checking... %4s / $2  " "$BAR" $(($1 * 100 / $2)) "$1";
+        printf "[ %s %3s%% ] checking... %4s / $2  " "$BAR" $(($1 * 100 / $2)) "$1";
     }
 
     # Resolve the IP
@@ -318,7 +318,7 @@ TARGET=$1
 
 # Some shells disable parsing backslash in echo statements by default
 # Set the flag to enable echo to behave consistently across platforms
-shopt -s xpg_echo
+#shopt -s xpg_echo
 
 # Get the command we will use: dig or host
 CMD_DIG=$(which dig)
