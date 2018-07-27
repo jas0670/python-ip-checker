@@ -51,3 +51,5 @@ while ws[cell].value: #basically, while the cell has an obtainable value, do thi
 		ws[cell].value = 'Yes'
 	value += 1 #goes to the next spot in the excel sheet
 	wb.save('example_testfile.xlsx')
+
+subprocess.call("ipcopy.py", shell=True)
