@@ -26,5 +26,6 @@ while ws[cell].value:
 	cell = 'D'+print_value
 	ws[cell].value = ''.join(list(response_data['history'][-1]['categoryDescriptions'].keys()))
 	value += 1
+	cell = letter+print_value
 	print("end of loop")
 	wb.save('example_testfile.xlsx')
