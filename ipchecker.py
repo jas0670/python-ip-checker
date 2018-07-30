@@ -2,6 +2,8 @@
 This requires python3, make sure you have pip3 installed as well
 Need to have installed from pip:
 - openpyxl
+
+NOTE: you cannot have your excel files open while this runs or the output to each file will not be saved.
 '''
 
 import os,sys #needed to run  bash scripts
@@ -24,13 +26,11 @@ cell = letter+print_value
 new_cell = letter+print_value
 second_value = value #this is for the second sheet
 
-
-while value<15:
-#while ws[cell].value: #basically, while the cell has an obtainable value, do this
+while ws[cell].value: #basically, while the cell has an obtainable value, do this
 	print_value = str(value) #needed so the workbook can grab the appropriate cell 
 	cell = letter+print_value #the cell in question
 	ip = str(ws[cell].value) #the ip in question
-	print(ip) #so we can keep track of what IP's are going through the system,. Mainly for testing purposes
+	print('Checking for blacklistings for '+ip) #so we can keep track of what IP's are going through the system,. Mainly for testing purposes
 	if ws[cell].value is None: #if there is no obtainable information
 		break
 	ip_report = ('./blcheck ' + ip) #holds the command block to be executed
@@ -45,8 +45,11 @@ while value<15:
 		cell = 'C'+print_value #moves to the next column
 		ws[cell].value = response #puts the number of blacklists in the home sheet
 	else:
+		#this is if the desired IP is safe and has no blacklists
 		cell = 'B'+print_value
 		ws[cell].value = 'Yes'
+		cell = 'C'+print_value
+		ws[cell].value = response
 	value += 1 #goes to the next spot in the excel sheet
 	wb.save('example_testfile.xlsx')
 
